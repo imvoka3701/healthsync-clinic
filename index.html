@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khủng Hoảng Tại Phòng Khám HealthSync - Case Study</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Mermaid.js -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --bg-dark: #080d1a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --bg-card-hover: rgba(51, 65, 85, 0.8);
+      --border-color: rgba(148, 163, 184, 0.15);
+      --border-accent: rgba(59, 130, 246, 0.5);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --accent: #10b981;
+      --danger: #f43f5e;
+      --amber: #f59e0b;
+      --purple: #8b5cf6;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-glow: 0 0 25px rgba(59, 130, 246, 0.15);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.1) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+
+    /* Header */
+    header {
+      margin-bottom: 30px;
+      padding: 35px;
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(135deg, #f43f5e 0%, #f59e0b 50%, #3b82f6 100%);
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(244, 63, 94, 0.15);
+      color: #fb7185;
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      padding: 4px 14px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #ffffff 30%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+
+    .subtitle { color: var(--text-muted); font-size: 1.05rem; }
+
+    /* Nav Tabs */
+    .tabs-nav {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 25px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+    }
+
+    .tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover { color: var(--text-main); background: var(--bg-card-hover); }
+
+    .tab-btn.active {
+      color: #ffffff;
+      background: var(--primary);
+      border-color: var(--primary);
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35);
+    }
+
+    .tab-content { display: none; animation: fadeIn 0.3s ease forwards; }
+    .tab-content.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Card */
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+    }
+
+    .icon-box {
+      width: 34px; height: 34px; border-radius: 8px;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    /* Crisis Alert */
+    .alert-banner {
+      background: rgba(244, 63, 94, 0.1);
+      border-left: 5px solid var(--danger);
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      margin-bottom: 25px;
+    }
+
+    .alert-banner h3 { color: #fb7185; font-size: 1.05rem; margin-bottom: 6px; }
+    .alert-banner p { color: #cbd5e1; font-size: 0.93rem; }
+
+    /* Gap Comparison Table */
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9rem; }
+    th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border-color); }
+    th { background: rgba(30, 41, 59, 0.8); color: #60a5fa; font-weight: 600; }
+    tr:hover td { background: rgba(51, 65, 85, 0.3); }
+
+    /* Flow Steps */
+    .flow-stepper {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin: 25px 0;
+      flex-wrap: wrap;
+    }
+
+    .flow-step {
+      flex: 1;
+      min-width: 170px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      text-align: center;
+      position: relative;
+    }
+
+    .flow-step.active {
+      border-color: var(--primary);
+      background: rgba(59, 130, 246, 0.15);
+    }
+
+    .flow-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 8px;
+    }
+
+    .flow-tag.pending { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .flow-tag.confirmed { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .flow-tag.checked { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+    .flow-tag.completed { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .flow-tag.cancelled { background: rgba(244, 63, 94, 0.2); color: #fb7185; }
+
+    /* Interactive Simulator */
+    .sim-panel {
+      background: #181825;
+      border: 1px solid #313244;
+      border-radius: var(--radius-md);
+      padding: 22px;
+      margin-top: 20px;
+    }
+
+    .sim-btn-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
+      background: #313244;
+      color: #cdd6f4;
+      border: 1px solid #45475a;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover { background: var(--primary); color: #fff; }
+    .btn-action.success { background: #10b981; color: #fff; border-color: #10b981; }
+    .btn-action.danger { background: #f43f5e; color: #fff; border-color: #f43f5e; }
+
+    .sim-status-box {
+      background: #11111b;
+      border: 1px solid #313244;
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88rem;
+    }
+
+    /* Diagram Canvas */
+    .diagram-container {
+      background: #090d16;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: var(--radius-md);
+      padding: 25px;
+      overflow-x: auto;
+      text-align: center;
+      min-height: 300px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Code Box */
+    .code-box {
+      position: relative;
+      background: #090d16;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-top: 15px;
+    }
+
+    .btn-copy {
+      position: absolute;
+      top: 12px; right: 12px;
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-copy:hover { background: var(--primary); color: #fff; }
+
+    pre code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88rem;
+      color: #f8fafc;
+      line-height: 1.6;
+    }
+
+    footer { text-align: center; margin-top: 40px; color: var(--text-muted); font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="badge-pill">Case Study: System Analysis & Database Design</div>
+      <h1>Khủng Hoảng Tại Phòng Khám HealthSync</h1>
+      <p class="subtitle">Giải quyết xung đột giữa UML Activity Diagram và thiết kế CSDL MySQL khi lập trình viên "bỏ quên" nghiệp vụ.</p>
+    </header>
+
+    <!-- Nav Tabs -->
+    <nav class="tabs-nav">
+      <button class="tab-btn active" onclick="switchTab('tab-crisis', this)">
+        <span>🚨</span> Chẩn đoán khủng hoảng (Gap Analysis)
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-erd', this)">
+        <span>📊</span> Sơ đồ ERD tối ưu
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-sim', this)">
+        <span>🎮</span> Mô phỏng 2 kịch bản nghiệp vụ
+      </button>
+      <button class="tab-btn" onclick="switchTab('tab-sql', this)">
+        <span>💻</span> Kịch bản SQL (healthsync_db.sql)
+      </button>
+    </nav>
+
+    <!-- TAB 1: Crisis & Gap Analysis -->
+    <section id="tab-crisis" class="tab-content active">
+      <div class="glass-card">
+        <div class="alert-banner">
+          <h3>⚠️ Tình trạng sự cố thực tế tại HealthSync</h3>
+          <p>Tính năng <strong>"Phạt tiền cọc khi hủy lịch"</strong> và <strong>"Kê đơn thuốc"</strong> liên tục báo lỗi do lập trình viên backend dùng <code>is_active BOOLEAN</code>, không có cột lưu tiền cọc/phạt và hoàn toàn không thiết kế bảng <code>Prescriptions</code>!</p>
+        </div>
+
+        <h2 class="card-title">
+          <span class="icon-box" style="background: rgba(244, 63, 94, 0.2); color: #fb7185;">🔍</span>
+          Bảng phân tích đối chiếu (Activity Diagram vs Legacy DB)
+        </h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Yêu cầu từ Activity Diagram (BA)</th>
+              <th>Thiết kế cũ của Lập trình viên</th>
+              <th>Đánh giá & Hậu quả</th>
+              <th>Giải pháp tái cấu trúc (Optimized)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Lịch hẹn trải qua 5 bước: PENDING &rarr; CONFIRMED &rarr; CHECKED_IN &rarr; COMPLETED / CANCELLED</td>
+              <td>Dùng 1 cột <code>is_active BOOLEAN</code></td>
+              <td><span style="color:#fb7185; font-weight:700;">Anti-pattern nghiêm trọng:</span> Không thể theo dõi trạng thái trung gian.</td>
+              <td>Dùng <code>ENUM('PENDING', 'CONFIRMED', 'CHECKED_IN', 'COMPLETED', 'CANCELLED')</code></td>
+            </tr>
+            <tr>
+              <td>Bệnh nhân nộp tiền cọc (Deposit) khi đặt lịch</td>
+              <td>Không có cột lưu tiền cọc</td>
+              <td>Kế toán không theo dõi được dòng tiền cọc của bệnh nhân.</td>
+              <td>Bổ sung cột <code>deposit_amount DECIMAL(12,2)</code></td>
+            </tr>
+            <tr>
+              <td>Nếu hủy lịch sau khi CONFIRMED, ghi nhận lý do và phạt tiền cọc</td>
+              <td>Không có cột phí phạt và lý do hủy</td>
+              <td>Thất thoát tài chính, không tính được tiền hoàn trả lại cho bệnh nhân.</td>
+              <td>Bổ sung <code>penalty_fee DECIMAL(12,2)</code> và <code>cancel_reason VARCHAR(255)</code></td>
+            </tr>
+            <tr>
+              <td>Sau khi khám xong (COMPLETED), Bác sĩ kê một đơn thuốc đi kèm</td>
+              <td>Không có bảng lưu đơn thuốc</td>
+              <td>Bác sĩ và dược sĩ không thể kê hoặc xuất thuốc trên phần mềm.</td>
+              <td>Tạo bảng mới <code>Prescriptions</code> (khóa ngoại trỏ về <code>Appointments</code>)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 2: ERD Diagram -->
+    <section id="tab-erd" class="tab-content">
+      <div class="glass-card">
+        <h2 class="card-title">
+          <span class="icon-box" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa;">📊</span>
+          Sơ đồ thực thể liên kết sau tối ưu (Optimized ERD)
+        </h2>
+
+        <div class="diagram-container">
+          <pre class="mermaid">
+erDiagram
+    Patients ||--o{ Appointments : "dat_lich"
+    Doctors ||--o{ Appointments : "phu_trach"
+    Appointments ||--o| Prescriptions : "co_don_thuoc"
+
+    Patients {
+        int patient_id PK
+        string full_name
+        string phone
+        timestamp created_at
+    }
+
+    Doctors {
+        int doctor_id PK
+        string full_name
+        string specialty
+        string phone
+    }
+
+    Appointments {
+        int appointment_id PK
+        int patient_id FK
+        int doctor_id FK
+        datetime appointment_date
+        enum status "PENDING, CONFIRMED, CHECKED_IN, COMPLETED, CANCELLED"
+        decimal deposit_amount "Tiền cọc"
+        decimal penalty_fee "Phí phạt hủy"
+        string cancel_reason "Lý do hủy"
+        timestamp updated_at
+    }
+
+    Prescriptions {
+        int prescription_id PK
+        int appointment_id FK "Unique (1-1)"
+        text medication_details "Thuốc kê"
+        text doctor_notes "Lời dặn bác sĩ"
+        datetime issued_date
+    }
+          </pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: Interactive Simulation -->
+    <section id="tab-sim" class="tab-content">
+      <div class="glass-card">
+        <h2 class="card-title">
+          <span class="icon-box" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">🎮</span>
+          Mô phỏng 2 kịch bản nghiệp vụ thực tế
+        </h2>
+
+        <div class="sim-panel">
+          <div class="sim-btn-group">
+            <button class="btn-action success" onclick="runScenario1()">▶ Chạy Kịch bản 1: Khám thành công & Kê đơn</button>
+            <button class="btn-action danger" onclick="runScenario2()">▶ Chạy Kịch bản 2: Hủy lịch & Phạt cọc</button>
+            <button class="btn-action" onclick="runScenario3()">⚠️ Kiểm thử Trigger: Kê đơn khi chưa khám</button>
+          </div>
+
+          <div class="sim-status-box" id="sim-log-box">
+            👉 Nhấp vào một trong các nút kịch bản ở trên để xem quá trình chuyển đổi trạng thái và dòng tiền tương ứng.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: SQL Source -->
+    <section id="tab-sql" class="tab-content">
+      <div class="glass-card">
+        <h2 class="card-title">
+          <span class="icon-box" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">💻</span>
+          Kịch bản SQL hoàn chỉnh (healthsync_db.sql)
+        </h2>
+        <div class="code-box">
+          <button class="btn-copy" onclick="copySql('sql-full-block')">Sao chép SQL</button>
+          <pre><code id="sql-full-block">-- Tái cấu trúc bảng Appointments
+CREATE TABLE Appointments (
+    appointment_id INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id INT NOT NULL,
+    doctor_id INT NOT NULL,
+    appointment_date DATETIME NOT NULL,
+    status ENUM('PENDING', 'CONFIRMED', 'CHECKED_IN', 'COMPLETED', 'CANCELLED') 
+        NOT NULL DEFAULT 'PENDING',
+    deposit_amount DECIMAL(12, 2) NOT NULL DEFAULT 0.00 CHECK (deposit_amount >= 0),
+    penalty_fee DECIMAL(12, 2) NOT NULL DEFAULT 0.00 CHECK (penalty_fee >= 0),
+    cancel_reason VARCHAR(255) NULL,
+    FOREIGN KEY (patient_id) REFERENCES Patients(patient_id),
+    FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id),
+    CONSTRAINT chk_penalty CHECK (penalty_fee <= deposit_amount)
+);
+
+-- Tạo bảng mới Prescriptions
+CREATE TABLE Prescriptions (
+    prescription_id INT AUTO_INCREMENT PRIMARY KEY,
+    appointment_id INT NOT NULL UNIQUE,
+    medication_details TEXT NOT NULL,
+    doctor_notes TEXT NULL,
+    issued_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (appointment_id) REFERENCES Appointments(appointment_id) ON DELETE CASCADE
+);
+
+-- Trigger chặn kê đơn cho lịch hẹn chưa COMPLETED
+DELIMITER //
+CREATE TRIGGER trg_check_prescription_eligibility
+BEFORE INSERT ON Prescriptions
+FOR EACH ROW
+BEGIN
+    DECLARE v_status VARCHAR(20);
+    SELECT status INTO v_status FROM Appointments WHERE appointment_id = NEW.appointment_id;
+    IF v_status != 'COMPLETED' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Lỗi nghiệp vụ: Chỉ được kê đơn thuốc cho lịch hẹn có trạng thái COMPLETED!';
+    END IF;
+END //
+DELIMITER ;</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2026 Case Study Phòng khám HealthSync • System Analysis & Database Design</p>
+    </footer>
+  </div>
+
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        background: '#090d16',
+        primaryColor: '#1e293b',
+        primaryTextColor: '#f8fafc',
+        primaryBorderColor: '#3b82f6',
+        lineColor: '#60a5fa'
+      }
+    });
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    }
+
+    function copySql(elementId) {
+      const code = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        alert('Đã sao chép câu lệnh SQL vào clipboard!');
+      });
+    }
+
+    function runScenario1() {
+      const box = document.getElementById('sim-log-box');
+      box.innerHTML = `
+<span style="color:#a6e3a1;">[BƯỚC 1]</span> Tạo lịch hẹn LH101: Bệnh nhân Trần Minh Tuấn | Cọc: 500.000 VNĐ | Trạng thái: PENDING
+<span style="color:#89b4fa;">[BƯỚC 2]</span> Xác nhận tiền cọc vào tài khoản | Trạng thái chuyển thành: CONFIRMED
+<span style="color:#cba6f7;">[BƯỚC 3]</span> Bệnh nhân đến quầy lễ tân | Trạng thái chuyển thành: CHECKED_IN
+<span style="color:#a6e3a1;">[BƯỚC 4]</span> Bác sĩ khám xong buổi khám | Trạng thái chuyển thành: COMPLETED
+<span style="color:#f9e2af;">[BƯỚC 5]</span> Bác sĩ kê đơn thuốc: Paracetamol 500mg, Augmentin 1g | Lưu thành công vào bảng Prescriptions!
+--------------------------------------------------------------------------------
+✓ Kết luận Kịch bản 1: Luồng nghiệp vụ kết thúc trọn vẹn, hồ sơ bệnh án và đơn thuốc được lưu trữ chính xác!
+      `;
+    }
+
+    function runScenario2() {
+      const box = document.getElementById('sim-log-box');
+      box.innerHTML = `
+<span style="color:#89b4fa;">[BƯỚC 1]</span> Lịch hẹn LH102: Bệnh nhân Nguyễn Thị Bích | Đã cọc: 300.000 VNĐ | Trạng thái: CONFIRMED
+<span style="color:#f38ba8;">[BƯỚC 2]</span> Bệnh nhân báo hủy lịch vì: "Bận việc đột xuất không thể sắp xếp"
+<span style="color:#f38ba8;">[BƯỚC 3]</span> Hệ thống cập nhật trạng thái: CANCELLED
+<span style="color:#fab387;">[BƯỚC 4]</span> Tính toán phí phạt (50% cọc): penalty_fee = 150.000 VNĐ
+<span style="color:#a6e3a1;">[BƯỚC 5]</span> Tính toán tiền hoàn trả cho bệnh nhân: 300.000đ - 150.000đ = 150.000 VNĐ
+--------------------------------------------------------------------------------
+✓ Kết luận Kịch bản 2: Phòng khám ghi nhận 150.000đ tiền phạt vào doanh thu; trả lại 150.000đ tiền cọc minh bạch!
+      `;
+    }
+
+    function runScenario3() {
+      const box = document.getElementById('sim-log-box');
+      box.innerHTML = `
+<span style="color:#f9e2af;">[THỰC HIỆN]</span> Cố tình chạy lệnh INSERT vào bảng Prescriptions cho lịch hẹn LH101 khi đang ở trạng thái PENDING...
+<span style="color:#f38ba8; font-weight:bold;">[DATABASE TRIGGER BLOCKED!]</span>
+Error Code: 1644 (45000): Lỗi nghiệp vụ: Chỉ được kê đơn thuốc cho lịch hẹn có trạng thái COMPLETED!
+--------------------------------------------------------------------------------
+🛡 Kết luận: Tầng cơ sở dữ liệu đã chặn đứng hành vi phi logic, đảm bảo tính toàn vẹn 100%!
+      `;
+    }
+  </script>
+</body>
+</html>
